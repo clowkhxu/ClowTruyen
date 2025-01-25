@@ -41,7 +41,7 @@ function NavBar() {
                         <img src={logo} alt="logo" />
                     </NavLink>}
                 <NavLink to='/' className="lg:text-2xl mobile:text-xl text-[#10b981] font-[900]">
-                    ClowTruyen
+                    CLOWTRUYEN
                 </NavLink>
             </div>
             {width > 1024 &&

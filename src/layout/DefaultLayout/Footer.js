@@ -32,8 +32,8 @@ function Footer() {
                 </div>
             </div>
             <div className='mt-[48px] font-[600] text-[#fff] text-center'>
-                <p className='mb-[8px]'>Tôi cung cấp web đọc truyện miễn phí, nên các bạn hãy tôn trọng công sức và công sức của tôi. Xin cảm ơn!</p>
-                <span className='text-xl text-[#10b981]'>2025 ClowKhxu</span>
+                <p className='mb-[8px]'>Tôi cung cấp web đọc truyện miễn phí, nên các bạn hãy tôn trọng công sức của tôi. Xin cảm ơn!</p>
+                <span className='text-xl text-[#10b981]'>© 2025 ClowKhxu</span>
             </div>
         </div>
     );

@@ -165,8 +165,8 @@ function Read() {
                                     <i className="mx-[4px] fa-solid fa-arrow-right"></i> từ bàn phím để chuyển chương.
                                     <i className="mx-[4px] fa-solid fa-arrow-down"></i> để tự động cuộn trang sau 6 giây.
                                 </p>}
-                            <span className='text-lg font-[600] text-center text-[#d90429] dark:text-[#fff]'>Nếu truyện bị lỗi vui lòng liên hệ qua Telegram:
-                                <a href="" target="_blank" rel="noopener" className='ml-[12px] underline'>ClowTruyen</a>
+                            <span className='text-lg font-[600] text-center text-[#d90429] dark:text-[#fff]'>Nếu truyện bị lỗi vui lòng liên hệ qua Facebook:
+                                <a href="https://discord.gg/Yw6YRhf3rk" target="_blank" rel="noopener" className='ml-[12px] underline'>ClowTruyen</a>
                             </span>
                         </div>
                         <div className='flex gap-[8px] justify-center mt-[24px]'>
