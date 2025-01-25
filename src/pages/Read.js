@@ -1,164 +1,164 @@
-import { useState, useEffect, Fragment, useContext, useRef } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useState, useEffect, Fragment, useContext, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 import useFetch from '../hooks/UseFetch';
-import storage, { setScrollDocument, scrollToBottom, scrollToTop, handleSetActivity } from '../utils'
+import storage, { setScrollDocument, scrollToBottom, scrollToTop, handleSetActivity } from '../utils';
 import Comment from '../layout/components/Comment';
 import Context from '../state/Context';
 import { comic, comicImage } from '../api';
 
 function Read() {
-    const { setQuantityComicHistory, width, isLogin, user } = useContext(Context)
-    const navigate = useNavigate()
-    const params = useParams()
-    const [data] = useFetch(`${comic}/${params?.slug}`)
-    const [dataChapter] = useFetch(`${comicImage}/${params?.id}`)
-    const [images, setImages] = useState([])
-    const [chapter, setChapter] = useState([])
+    const { setQuantityComicHistory, width, isLogin, user } = useContext(Context);
+    const navigate = useNavigate();
+    const params = useParams();
+    const [data] = useFetch(`${comic}/${params?.slug}`);
+    const [dataChapter] = useFetch(`${comicImage}/${params?.id}`);
+    const [images, setImages] = useState([]);
+    const [chapter, setChapter] = useState([]);
     const [selectedChapter, setSelectedChapter] = useState(params?.id);
-    const [chapterPath, setChapterPath] = useState('')
-    const [currentIndex, setCurrentIndex] = useState(0)
-    const [isScroll, setIsScroll] = useState(false)
-    const [isShowMessage, setIsShowMessage] = useState(false)
-    const [isShowTools, setIsShowTools] = useState(false)
-    const idScrollRef = useRef()
+    const [chapterPath, setChapterPath] = useState('');
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isScroll, setIsScroll] = useState(false);
+    const [isShowMessage, setIsShowMessage] = useState(false);
+    const [isShowTools, setIsShowTools] = useState(false);
+    const idScrollRef = useRef();
 
     useEffect(() => {
-        setScrollDocument(isShowMessage)
-    }, [isShowMessage])
+        setScrollDocument(isShowMessage);
+    }, [isShowMessage]);
 
     useEffect(() => {
         if (data) {
             const chaptersId =
                 data?.data?.item?.chapters[0]?.server_data.map(
-                    chapter => chapter?.chapter_api_data.split('/').pop()) || []
-            const index = chaptersId.findIndex(id => id === params.id)
-            setChapter(chaptersId)
-            setCurrentIndex(index)
+                    chapter => chapter?.chapter_api_data.split('/').pop()) || [];
+            const index = chaptersId.findIndex(id => id === params.id);
+            setChapter(chaptersId);
+            setCurrentIndex(index);
         }
-    }, [data])
+    }, [data]);
 
     useEffect(() => {
         if (dataChapter) {
-            setImages(dataChapter?.data?.item?.chapter_image || [])
-            setChapterPath(dataChapter?.data?.item?.chapter_path)
-            setSelectedChapter(params?.id)
+            setImages(dataChapter?.data?.item?.chapter_image || []);
+            setChapterPath(dataChapter?.data?.item?.chapter_path);
+            setSelectedChapter(params?.id);
 
-            const historyStorage = storage.get('history-storage', {})
+            const historyStorage = storage.get('history-storage', {});
 
             if (!historyStorage[user?.email]) {
-                historyStorage[user?.email] = {}
+                historyStorage[user?.email] = {};
             }
 
             if (!historyStorage[user?.email][params?.slug]) {
-                historyStorage[user?.email][params?.slug] = []
+                historyStorage[user?.email][params?.slug] = [];
             }
 
             const isExistComic =
                 historyStorage[user?.email][params?.slug]?.some(comic =>
-                    comic?.data?.item?._id === params?.id || false)
+                    comic?.data?.item?._id === params?.id || false);
 
             if (!isExistComic) {
                 historyStorage[user?.email][params?.slug] = [
                     ...(historyStorage[user?.email][params?.slug]), dataChapter
-                ]
-                storage.set('history-storage', historyStorage)
+                ];
+                storage.set('history-storage', historyStorage);
                 width > 1023 &&
-                    setQuantityComicHistory(Object.keys(historyStorage[user?.email]).length)
+                    setQuantityComicHistory(Object.keys(historyStorage[user?.email]).length);
             }
 
-            toast(`Bạn đang ở chương ${dataChapter?.data?.item?.chapter_name}`, { duration: 2000 })
+            toast(`Bạn đang ở chương ${dataChapter?.data?.item?.chapter_name}`, { duration: 2000 });
 
-            handleSetActivity(user, dataChapter, 'readComic')
+            handleSetActivity(user, dataChapter, 'readComic');
         }
-    }, [dataChapter])
+    }, [dataChapter]);
 
     useEffect(() => {
         const handleAutoScroll = () => {
             if (isScroll) {
                 idScrollRef.current = setInterval(() => {
                     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-                        clearInterval(idScrollRef.current)
-                        setIsScroll(!isScroll)
-                        toast("Đã cuộn đến cuối trang!")
+                        clearInterval(idScrollRef.current);
+                        setIsScroll(!isScroll);
+                        toast("Đã cuộn đến cuối trang!");
                     } else {
-                        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })
+                        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
                     }
-                }, 6000)
+                }, 6000);
             } else {
-                clearInterval(idScrollRef.current)
+                clearInterval(idScrollRef.current);
             }
-        }
-        handleAutoScroll()
-        return () => clearInterval(idScrollRef.current)
-    }, [isScroll])
+        };
+        handleAutoScroll();
+        return () => clearInterval(idScrollRef.current);
+    }, [isScroll]);
 
     const handleUseKeyChangeChapter = (event) => {
         if (event.key === 'ArrowLeft') {
-            handlePrevChapter()
+            handlePrevChapter();
         } else if (event.key === 'ArrowRight') {
-            handleNextChapter()
+            handleNextChapter();
         }
-    }
+    };
 
     useEffect(() => {
-        window.addEventListener('keydown', handleUseKeyChangeChapter)
-        return () => window.removeEventListener('keydown', handleUseKeyChangeChapter)
-    }, [currentIndex])
+        window.addEventListener('keydown', handleUseKeyChangeChapter);
+        return () => window.removeEventListener('keydown', handleUseKeyChangeChapter);
+    }, [currentIndex]);
 
     const handleChangeChapter = (index) => {
-        setCurrentIndex(index)
-        navigate(`/read/${params.slug}/${chapter[index]}`)
-    }
+        setCurrentIndex(index);
+        navigate(`/read/${params.slug}/${chapter[index]}`);
+    };
 
     const handleChangeSelectedChapter = (event) => {
-        setSelectedChapter(event.target.value)
-        handleChangeChapter(event.target.selectedIndex)
-    }
+        setSelectedChapter(event.target.value);
+        handleChangeChapter(event.target.selectedIndex);
+    };
 
     const handlePrevChapter = () => {
         if (currentIndex > 0) {
-            let index = currentIndex - 1
-            handleChangeChapter(index)
+            let index = currentIndex - 1;
+            handleChangeChapter(index);
         }
-    }
+    };
 
     const handleNextChapter = () => {
         if (currentIndex < chapter.length - 1) {
-            let index = currentIndex + 1
-            handleChangeChapter(index)
+            let index = currentIndex + 1;
+            handleChangeChapter(index);
         }
-    }
+    };
 
     const handleOpenModal = () => {
         if (!isLogin) {
-            toast.error('Bạn cần đăng nhập để bình luận!', { duration: 2000 })
-            return
+            toast.error('Bạn cần đăng nhập để bình luận!', { duration: 2000 });
+            return;
         }
-        setIsShowMessage(!isShowMessage)
-    }
+        setIsShowMessage(!isShowMessage);
+    };
 
     const handleScroll = () => {
-        const newIsScroll = !isScroll
+        const newIsScroll = !isScroll;
         newIsScroll ?
             toast('Đã bật chế độ tự động cuộn!', { duration: 1000 }) :
-            toast('Đã tắt chế độ tự động cuộn!', { duration: 1000 })
-        setIsScroll(newIsScroll)
-    }
+            toast('Đã tắt chế độ tự động cuộn!', { duration: 1000 });
+        setIsScroll(newIsScroll);
+    };
 
     // Ngăn chuột phải
     useEffect(() => {
         const handleContextMenu = (event) => {
             event.preventDefault(); // Chặn menu chuột phải
-        }
+        };
 
-        document.addEventListener('contextmenu', handleContextMenu)
+        document.addEventListener('contextmenu', handleContextMenu);
 
         return () => {
-            document.removeEventListener('contextmenu', handleContextMenu)
-        }
-    }, [])
+            document.removeEventListener('contextmenu', handleContextMenu);
+        };
+    }, []);
 
     return (
         <Fragment>
@@ -210,7 +210,9 @@ function Read() {
                             <img
                                 loading='lazy'
                                 src={`https://sv1.otruyencdn.com/${chapterPath}/${image.image_file}`}
-                                alt='image' />
+                                alt='image'
+                                draggable="false" // Ngừng kéo hình ảnh
+                            />
                         </li>
                     ))}
                 </ul>
@@ -237,7 +239,6 @@ function Read() {
                                                 className='bg-[#fff] text-[#000] cursor-pointer text-lg'
                                                 key={index}
                                                 value={chapter?.chapter_api_data.split('/').pop()}>
-
                                                 Chương {chapter?.chapter_name}
                                             </option>
                                         ))}
@@ -287,15 +288,12 @@ function Read() {
                         )}
                     </Fragment>}
             </div>
-            {isShowMessage &&
-                <Comment
-                    dataChapter={dataChapter}
-                    id={params.id}
-                    slug={params.slug}
-                    setIsShowMessage={setIsShowMessage}
-                />
-            }
-        </Fragment >
+            {isShowMessage && <Comment
+                chapterPath={chapterPath}
+                isShowMessage={isShowMessage}
+                setIsShowMessage={setIsShowMessage}
+                slug={params?.slug} />}
+        </Fragment>
     );
 }
 
