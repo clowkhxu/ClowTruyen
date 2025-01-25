@@ -147,6 +147,19 @@ function Read() {
         setIsScroll(newIsScroll)
     }
 
+    // Ngăn chuột phải
+    useEffect(() => {
+        const handleContextMenu = (event) => {
+            event.preventDefault(); // Chặn menu chuột phải
+        }
+
+        document.addEventListener('contextmenu', handleContextMenu)
+
+        return () => {
+            document.removeEventListener('contextmenu', handleContextMenu)
+        }
+    }, [])
+
     return (
         <Fragment>
             <div className='flex flex-col gap-[24px] items-center justify-center'>
@@ -165,7 +178,7 @@ function Read() {
                                     <i className="mx-[4px] fa-solid fa-arrow-right"></i> từ bàn phím để chuyển chương.
                                     <i className="mx-[4px] fa-solid fa-arrow-down"></i> để tự động cuộn trang sau 6 giây.
                                 </p>}
-                            <span className='text-lg font-[600] text-center text-[#d90429] dark:text-[#fff]'>Nếu truyện bị lỗi vui lòng liên hệ qua Facebook:
+                            <span className='text-lg font-[600] text-center text-[#d90429] dark:text-[#fff]'>Nếu truyện bị lỗi vui lòng liên hệ qua Discord:
                                 <a href="https://discord.gg/Yw6YRhf3rk" target="_blank" rel="noopener" className='ml-[12px] underline'>ClowTruyen</a>
                             </span>
                         </div>
@@ -173,6 +186,7 @@ function Read() {
                             <button
                                 onClick={handlePrevChapter}
                                 className={`select-none py-[4px] px-[12px] mobile:px-[8px] rounded-l-[8px] block text-lg transition-all hover:scale-[1.05] text-[#fff] ${currentIndex === 0 ? 'pointer-events-none bg-[rgba(16,185,129,0.48)]' : 'pointer-events-auto bg-[#10b981]'}`}
+
                             >
                                 <i className="mr-[8px] fa-solid fa-angle-left"></i>
                                 Chương trước
@@ -180,6 +194,7 @@ function Read() {
                             <button
                                 onClick={handleNextChapter}
                                 className={`select-none py-[4px] px-[12px] mobile:px-[8px] rounded-r-[8px] block text-lg transition-all hover:scale-[1.05] text-[#fff] ${currentIndex === chapter.length - 1 ? 'pointer-events-none bg-[rgba(16,185,129,0.48)]' : 'pointer-events-auto bg-[#10b981]'}`}
+
                             >
                                 Chương sau
                                 <i className="ml-[8px] fa-solid fa-angle-right"></i>
@@ -205,6 +220,7 @@ function Read() {
                             <button
                                 onClick={() => setIsShowTools(true)}
                                 className='select-none py-[4px] px-[12px] mobile:px-[8px] rounded-[8px] block text-lg transition-all hover:scale-[1.05] bg-[#10b981] text-[#fff] fixed lg:bottom-[32px] lg:right-[32px] mobile:right-[16px] mobile:bottom-[16px]'>
+
                                 <i className="mr-[8px] fa-solid fa-screwdriver-wrench"></i>
                                 Hộp công cụ
                             </button>
@@ -221,6 +237,7 @@ function Read() {
                                                 className='bg-[#fff] text-[#000] cursor-pointer text-lg'
                                                 key={index}
                                                 value={chapter?.chapter_api_data.split('/').pop()}>
+
                                                 Chương {chapter?.chapter_name}
                                             </option>
                                         ))}
@@ -228,6 +245,7 @@ function Read() {
                                     <button
                                         onClick={handlePrevChapter}
                                         className={`select-none py-[4px] px-[12px] mobile:px-[8px] rounded-[8px] block text-lg transition-all hover:scale-[1.05] text-[#fff] ${currentIndex === 0 ? 'pointer-events-none bg-[rgba(16,185,129,0.48)]' : 'pointer-events-auto bg-[#10b981]'}`}
+
                                     >
                                         <i className="mr-[8px] fa-solid fa-angle-left"></i>
                                         Chương trước
@@ -235,6 +253,7 @@ function Read() {
                                     <button
                                         onClick={handleNextChapter}
                                         className={`select-none py-[4px] px-[12px] mobile:px-[8px] rounded-[8px] block text-lg transition-all hover:scale-[1.05] text-[#fff] ${currentIndex === chapter.length - 1 ? 'pointer-events-none bg-[rgba(16,185,129,0.48)]' : 'pointer-events-auto bg-[#10b981]'}`}
+
                                     >
                                         Chương sau
                                         <i className="ml-[8px] fa-solid fa-angle-right"></i>
